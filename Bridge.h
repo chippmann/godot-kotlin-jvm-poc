@@ -12,7 +12,7 @@ class Bridge {
 public:
     static void* createInstance(void *instance, void *methodData);
     static void destroyInstance(void *instance, void *methodData, void *classData);
-    static godot_variant invokeMethod(void *instance, void *methodData, void *classData, int numArgs, godot_variant **args);
+    static godot_variant invokeMethod(godot_object *instance, void *methodData, void *classData, int numArgs, godot_variant **args);
 };
 
 

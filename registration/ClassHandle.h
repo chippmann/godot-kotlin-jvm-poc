@@ -42,7 +42,7 @@ ClassHandle<T>::ClassHandle(
 template<class T>
 T ClassHandle<T>::wrap(void *instance) {
     auto javaInstance = (jclass) this->factory();
-    auto fieldId = Jvm::env->GetFieldID(javaInstance, "_ptr", "I");
+    auto fieldId = Jvm::env->GetFieldID(Jvm::env->GetObjectClass(javaInstance), "_ptr", "L");
     Jvm::env->SetLongField(javaInstance, fieldId, (long) instance);
     return (T) javaInstance;
 }
