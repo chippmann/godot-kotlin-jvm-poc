@@ -14,6 +14,7 @@ void godot_gdnative_init(godot_gdnative_init_options *options) {
     std::cout << "gdnative init called" << std::endl;
     Godot::init(options);
     Jvm::setup();
+//    JniHelper::setupClassLoader("java/build/libs/java-0.0.1.jar");
 }
 
 void godot_gdnative_terminate(godot_gdnative_terminate_options *options) {
@@ -23,7 +24,6 @@ void godot_gdnative_terminate(godot_gdnative_terminate_options *options) {
 
 void godot_nativescript_init(void *handle) {
     std::cout << "nativescript init called" << std::endl;
-    JniHelper::setupClassLoader("java/build/libs/java-0.0.1.jar");
 
     godot_instance_create_func create = {};
     create.create_func = Bridge::createInstance;
