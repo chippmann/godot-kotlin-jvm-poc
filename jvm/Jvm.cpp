@@ -48,7 +48,7 @@ void Jvm::destroy() {
 
 void Jvm::loadJvmDll(CreateJavaVM *createJavaVM) {
 #ifdef __linux__
-    const char *libPath = "jre/lib/amd64/server/libjvm.so";
+    const char *libPath = "cmake-build-debug/jre/lib/amd64/server/libjvm.so";
     auto jvmLib = dlopen(libPath, RTLD_NOW);
 #elif _WIN32
     const char *libPath = "jre/bin/server/jvm.dll";

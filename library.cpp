@@ -10,7 +10,8 @@
 
 void testBuiltinMethod();
 void setupClassLoader(const char *classPath1);
-jclass createClass(char* fqname);
+jclass getClass(const char* fqname);
+jclass createClass(jclass clazz);
 
 godot_gdnative_ext_nativescript_api_struct *nativescript;
 _jobject* urlClassLoader;
@@ -39,25 +40,30 @@ void godot_gdnative_terminate(godot_gdnative_terminate_options *options) {
 
 void godot_nativescript_init(void *handle) {
     std::cout << "nativescript init called" << std::endl;
-    setupClassLoader("java-0.0.1.jar");
+    setupClassLoader("java/build/libs/java-0.0.1.jar");
 
     godot_instance_create_func create = {};
     create.create_func = Bridge::createInstance;
-    create.method_data = new ClassHandle<jclass>(handle, "", "", []{ return createClass((char *) "godot.test.TestClass"); }, false);
+    create.method_data = new ClassHandle<jclass>(handle, "", "", []{ return createClass(getClass("godot.test.TestClass")); }, false);
     godot_instance_destroy_func destroy = {};
     destroy.destroy_func = Bridge::destroyInstance;
 
     nativescript->godot_nativescript_register_class(handle, "TestClass", "Node", create, destroy);
 
     godot_instance_method method = {};
-    auto methodData = new std::pair<char*, char*>();
-    methodData->first = (char *) "_ready";
-    methodData->second = (char *) "()V)";
-    method.method_data = (void *) methodData;
+    method.method_data = (void *) new std::pair<const char*, const char*>("_ready", "()V");
     method.method = Bridge::invokeMethod;
     nativescript->godot_nativescript_register_method(handle, "TestClass", "_ready", {GODOT_METHOD_RPC_MODE_DISABLED}, method);
 
     testBuiltinMethod();
+    auto clazz = getClass("godot.test.TestClass");
+    auto instance = createClass(clazz);
+    std::cout << "Instance: " << instance << std::endl;
+    auto methodID = Jvm::env->GetMethodID(clazz, "_ready", "()V");
+    auto blubb = Jvm::env->GetObjectClass(instance);
+    auto test = Jvm::env->GetMethodID(blubb, "_ready", "()V");
+    std::cout << "methodID: " << instance << std::endl;
+    Jvm::env->CallVoidMethod(instance, methodID);
 }
 
 void godot_nativescript_terminate(void *handle) {
@@ -75,16 +81,19 @@ void testBuiltinMethod() {
     std::cout << "Method Called" << std::endl;
 }
 
-jclass createClass(char* fqname) {
-    jstring classNameUTF = Jvm::env->NewStringUTF(fqname);
-    _jobject* clazz = Jvm::env->CallObjectMethod(urlClassLoader, loadClassMethodId, classNameUTF);
-
+jclass createClass(jclass clazz) {
     jmethodID classCtor = Jvm::env->GetMethodID(
-            (jclass) clazz,
+            clazz,
             "<init>",
             "()V"
     );
-    return (jclass) Jvm::env->NewObject((jclass) clazz, classCtor);
+    return (jclass) Jvm::env->NewObject(clazz, classCtor);
+}
+
+jclass getClass(const char* fqname) {
+    jstring classNameUTF = Jvm::env->NewStringUTF(fqname);
+    std::cout << "classNameUTF: " << classNameUTF << std::endl;
+    return (jclass) Jvm::env->CallObjectMethod(urlClassLoader, loadClassMethodId, classNameUTF);
 }
 
 void setupClassLoader(const char *classPath1) {
