@@ -8,7 +8,7 @@ include_directories(${JNI_INCLUDE_DIRS})
 set(JAVA_HOME "/usr/lib/jvm/default")
 set(JRE_HOME "${JAVA_HOME}/jre")
 
-add_library(testInterop SHARED library.cpp library.h)
+add_library(testInterop SHARED library.cpp library.h jvm/Jvm.cpp jvm/Jvm.h Bridge.cpp Bridge.h registration/ClassHandle.h)
 
 target_link_libraries(testInterop ${CMAKE_DL_LIBS})
 
@@ -18,4 +18,4 @@ target_include_directories(testInterop SYSTEM PUBLIC godot-headers)
 file(GLOB JRE_FILES "${JRE_HOME}/*")
 file(COPY ${JRE_FILES} DESTINATION jre)
 
-file(COPY java/TestClass.class DESTINATION java)
+file(COPY java/build/libs/java-0.0.1.jar DESTINATION .)
