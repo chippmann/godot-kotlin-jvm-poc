@@ -28,7 +28,7 @@ void Jvm::createJVM() {
     // https://docs.oracle.com/javase/10/docs/specs/jni/invocation.html
     JavaVMInitArgs vm_args;
     auto *options = new JavaVMOption[3];
-    options[0].optionString = (char *) "-Djava.class.path=";
+    options[0].optionString = (char *) "-Djava.class.path=java/build/libs/java-0.0.1.jar";
     options[1].optionString = (char *) "-Djava.library.path=";
     options[2].optionString = (char *) "-verbose:jni";
     vm_args.version = JNI_VERSION_1_8;

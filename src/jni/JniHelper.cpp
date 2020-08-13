@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "JniHelper.h"
 #include "../jvm/Jvm.h"
 
@@ -50,8 +51,11 @@ void JniHelper::setupClassLoader(const char *classPath1) {
 }
 
 jclass JniHelper::getClass(const char *fqname) {
-    jstring classNameUTF = Jvm::env->NewStringUTF(fqname);
-    return (jclass) Jvm::env->CallObjectMethod(urlClassLoader, loadClassMethodId, classNameUTF);
+    std::string fqName = fqname;
+    std::replace( fqName.begin(), fqName.end(), '.', '/');
+    return Jvm::env->FindClass(fqName.c_str());
+//    jstring classNameUTF = Jvm::env->NewStringUTF(fqname);
+//    return (jclass) Jvm::env->CallObjectMethod(urlClassLoader, loadClassMethodId, classNameUTF);
 }
 
 jclass JniHelper::createClass(jclass clazz) {
