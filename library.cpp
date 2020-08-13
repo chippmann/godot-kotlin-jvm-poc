@@ -38,6 +38,12 @@ void godot_nativescript_init(void *handle) {
     method.method = Bridge::invokeMethod;
     method.free_func = Godot::gdnative->godot_free;
     Godot::nativescript->godot_nativescript_register_method(handle, "TestClass", "_ready", {GODOT_METHOD_RPC_MODE_DISABLED}, method);
+
+    godot_instance_method method2 = {};
+    method2.method_data = (void *) new std::pair<const char*, const char*>("_process", "(F)V");
+    method2.method = Bridge::invokeMethod;
+    method2.free_func = Godot::gdnative->godot_free;
+    Godot::nativescript->godot_nativescript_register_method(handle, "TestClass", "_process", {GODOT_METHOD_RPC_MODE_DISABLED}, method2);
 }
 
 void godot_nativescript_terminate(void *handle) {

@@ -8,6 +8,7 @@
 #include "Godot.h"
 #include <jni.h>
 #include <cstdlib>
+#include <string>
 
 void *Bridge::createInstance(void *instance, void *methodData) {
     auto *classHandle = (ClassHandle<jclass> *) methodData;
@@ -31,8 +32,13 @@ godot_variant Bridge::invokeMethod(godot_object *instance, void *methodData, voi
     auto methodId = Jvm::env->GetMethodID(objectClass, methodDataPair->first, methodDataPair->second);
 //    auto variantJavaInstance = (jclass) Jvm::env->CallObjectMethod(javaInstance, methodId, args);
 
-    Jvm::env->CallVoidMethod(javaInstance, methodId);
-
+    std::string signature = methodDataPair->second;
+    if (signature == "(F)V") {
+        float fakeDelta = 0.002;
+        Jvm::env->CallVoidMethod(javaInstance, methodId, fakeDelta);
+    } else {
+        Jvm::env->CallVoidMethod(javaInstance, methodId);
+    }
 
     auto variantPtr = std::malloc(sizeof(godot_variant));
     Godot::gdnative->godot_variant_new_nil((godot_variant *) (variantPtr));

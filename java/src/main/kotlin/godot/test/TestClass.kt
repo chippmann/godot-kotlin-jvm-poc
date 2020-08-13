@@ -12,6 +12,10 @@ class TestClass: Object() {
         println("_ready called!")
     }
 
+    fun _process(delta: Float) {
+        println("_process called!")
+    }
+
     fun _onDestroy() {
         println("_onDestroy called!")
     }
