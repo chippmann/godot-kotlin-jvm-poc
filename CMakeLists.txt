@@ -8,7 +8,11 @@ include_directories(${JNI_INCLUDE_DIRS})
 set(JAVA_HOME "/usr/lib/jvm/default")
 set(JRE_HOME "${JAVA_HOME}/jre")
 
-add_library(testInterop SHARED library.cpp library.h jvm/Jvm.cpp jvm/Jvm.h Bridge.cpp Bridge.h registration/ClassHandle.h jni/JniHelper.cpp jni/JniHelper.h Godot.cpp Godot.h)
+# Get Sources
+file(GLOB_RECURSE SOURCES src/*.c**)
+file(GLOB_RECURSE HEADERS src/*.h**)
+
+add_library(testInterop SHARED library.cpp library.h ${SOURCES} ${HEADERS})
 
 target_link_libraries(testInterop ${CMAKE_DL_LIBS})
 

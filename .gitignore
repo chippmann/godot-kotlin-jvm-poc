@@ -246,3 +246,16 @@ hs_err_pid*
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/clion,c++,intellij,java,kotlin
+/java/.idea/jarRepositories.xml
+/java/.idea/misc.xml
+/java/.idea/vcs.xml
+/java/.idea/compiler.xml
+/java/.gradle/
+/java/build/
+/.import/
+/godot-headers/images/faq/create_dlscript.png.import
+/godot-headers/images/faq/dllibrary_create_new_dllibrary.png.import
+/godot-headers/images/faq/dllibrary_create_new_resource.png.import
+/godot-headers/images/faq/dllibrary_save_as_resource.png.import
+/godot-headers/images/faq/set_project_dllibrary.png.import
+/godot-headers/images/faq/set_script_dllibrary.png.import

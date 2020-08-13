@@ -1,9 +1,9 @@
 #include "library.h"
-#include "jvm/Jvm.h"
-#include "Bridge.h"
-#include "registration/ClassHandle.h"
-#include "jni/JniHelper.h"
-#include "Godot.h"
+#include "src/jvm/Jvm.h"
+#include "src/Bridge.h"
+#include "src/registration/ClassHandle.h"
+#include "src/jni/JniHelper.h"
+#include "src/Godot.h"
 #include <iostream>
 #include <vector>
 #include <jni.h>
