@@ -2,7 +2,7 @@ package godot.test
 
 import godot.core.Object
 
-class TestClass: Object() {
+class Simple: Object() {
 
     fun _onInit() {
         println("_onInit called!")
@@ -20,18 +20,18 @@ class TestClass: Object() {
         println("_onDestroy called!")
     }
 
-    fun benchmark_simple_add() {
+    fun benchmark_simple_add(): Int {
         val a = 1
         val b = 2
-        val result = a + b
+        return a + b
     }
 
-    fun benchmark_avg() {
+    fun benchmark_avg(): Int {
         val size = 10000
         var total = 0
         for (i in 0 until size) {
             total += i
         }
-        val result = total / size
+        return total / size
     }
 }

@@ -27,23 +27,23 @@ void godot_nativescript_init(void *handle) {
 
     godot_instance_create_func create = {};
     create.create_func = Bridge::createInstance;
-    create.method_data = new ClassHandle<jclass>(handle, "TestClass", "Node", []{ return JniHelper::getAnCreateClass("godot.test.TestClass"); }, false);
+    create.method_data = new ClassHandle<jclass>(handle, "Simple", "Node", []{ return JniHelper::getAnCreateClass("godot.test.Simple"); }, false);
     godot_instance_destroy_func destroy = {};
     destroy.destroy_func = Bridge::destroyInstance;
 
-    Godot::nativescript->godot_nativescript_register_class(handle, "TestClass", "Node", create, destroy);
+    Godot::nativescript->godot_nativescript_register_class(handle, "Simple", "Node", create, destroy);
 
     godot_instance_method method = {};
-    method.method_data = (void *) new std::pair<const char*, const char*>("_ready", "()V");
+    method.method_data = (void *) new std::pair<const char*, const char*>("benchmark_simple_add", "()I");
     method.method = Bridge::invokeMethod;
     method.free_func = Godot::gdnative->godot_free;
-    Godot::nativescript->godot_nativescript_register_method(handle, "TestClass", "_ready", {GODOT_METHOD_RPC_MODE_DISABLED}, method);
+    Godot::nativescript->godot_nativescript_register_method(handle, "Simple", "benchmark_simple_add", {GODOT_METHOD_RPC_MODE_DISABLED}, method);
 
     godot_instance_method method2 = {};
-    method2.method_data = (void *) new std::pair<const char*, const char*>("_process", "(F)V");
+    method2.method_data = (void *) new std::pair<const char*, const char*>("benchmark_avg", "()I");
     method2.method = Bridge::invokeMethod;
     method2.free_func = Godot::gdnative->godot_free;
-    Godot::nativescript->godot_nativescript_register_method(handle, "TestClass", "_process", {GODOT_METHOD_RPC_MODE_DISABLED}, method2);
+    Godot::nativescript->godot_nativescript_register_method(handle, "Simple", "benchmark_avg", {GODOT_METHOD_RPC_MODE_DISABLED}, method2);
 }
 
 void godot_nativescript_terminate(void *handle) {

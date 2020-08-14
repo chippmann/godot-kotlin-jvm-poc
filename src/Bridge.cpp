@@ -32,15 +32,18 @@ godot_variant Bridge::invokeMethod(godot_object *instance, void *methodData, voi
     auto methodId = Jvm::env->GetMethodID(objectClass, methodDataPair->first, methodDataPair->second);
 //    auto variantJavaInstance = (jclass) Jvm::env->CallObjectMethod(javaInstance, methodId, args);
 
-    std::string signature = methodDataPair->second;
-    if (signature == "(F)V") {
-        float fakeDelta = 0.002;
-        Jvm::env->CallVoidMethod(javaInstance, methodId, fakeDelta);
-    } else {
-        Jvm::env->CallVoidMethod(javaInstance, methodId);
-    }
+    auto result = (jint) Jvm::env->CallIntMethod(javaInstance, methodId);
+
+
+//    std::string signature = methodDataPair->second;
+//    if (signature == "(F)V") {
+//        float fakeDelta = 0.002;
+//        Jvm::env->CallVoidMethod(javaInstance, methodId, fakeDelta);
+//    } else {
+//        Jvm::env->CallVoidMethod(javaInstance, methodId);
+//    }
 
     auto variantPtr = std::malloc(sizeof(godot_variant));
-    Godot::gdnative->godot_variant_new_nil((godot_variant *) (variantPtr));
+    Godot::gdnative->godot_variant_new_int((godot_variant *) (variantPtr), result);
     return *((godot_variant *) variantPtr);
 }
