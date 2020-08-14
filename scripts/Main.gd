@@ -5,10 +5,11 @@ var MovingAverage = load("res://scripts/MovingAverage.gd")
 var Stats = load("res://scripts/Stats.gd")
 
 var classes = [
-	"TestClass"
+	"Simple"
 ]
 var languages = [
 	"ktJvm",
+	"kt",
 	"gd"
 ]
 

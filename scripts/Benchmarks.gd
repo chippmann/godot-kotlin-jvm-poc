@@ -16,6 +16,8 @@ func __resolve_script(lang, name):
 	var path
 	if lang == "gd":
 		path = "gd/%s.gd" % name
+	elif lang == "kt":
+		path = "src/gdns/kotlin/%s.gdns" % name
 	elif lang == "ktJvm":
 		path = "kt/%s.gdns" % name
 	else:
