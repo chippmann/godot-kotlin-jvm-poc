@@ -32,7 +32,7 @@ void godot_nativescript_init(void *handle) {
     destroy.destroy_func = Bridge::destroyInstance;
 
     Godot::nativescript->godot_nativescript_register_class(handle, "Simple", "Node", create, destroy);
-
+//benchmarkVectors
     godot_instance_method method = {};
     method.method_data = (void *) new std::pair<const char*, const char*>("benchmark_simple_add", "()I");
     method.method = Bridge::invokeMethod;
@@ -44,6 +44,12 @@ void godot_nativescript_init(void *handle) {
     method2.method = Bridge::invokeMethod;
     method2.free_func = Godot::gdnative->godot_free;
     Godot::nativescript->godot_nativescript_register_method(handle, "Simple", "benchmark_avg", {GODOT_METHOD_RPC_MODE_DISABLED}, method2);
+
+    godot_instance_method method3 = {};
+    method3.method_data = (void *) new std::pair<const char*, const char*>("benchmark_vectors", "()Lgodot/core/Vector3;");
+    method3.method = Bridge::invokeMethod;
+    method3.free_func = Godot::gdnative->godot_free;
+    Godot::nativescript->godot_nativescript_register_method(handle, "Simple", "benchmark_vectors", {GODOT_METHOD_RPC_MODE_DISABLED}, method3);
 }
 
 void godot_nativescript_terminate(void *handle) {

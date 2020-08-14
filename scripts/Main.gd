@@ -21,7 +21,7 @@ func _init():
 				__run_benchmark(benchmark)
 
 
-func __run_benchmark(benchmark, iterations=3, runs=10, warmups=5):
+func __run_benchmark(benchmark, iterations=3, runs=10, warmups=0):
 	var stats = Stats.new()
 	print("Running benchmark: %s" % str(benchmark))
 	for warmup in range(warmups):

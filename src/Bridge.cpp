@@ -6,6 +6,7 @@
 #include "registration/ClassHandle.h"
 #include "jvm/Jvm.h"
 #include "Godot.h"
+#include "jni/JniHelper.h"
 #include <jni.h>
 #include <cstdlib>
 #include <string>
@@ -30,20 +31,40 @@ godot_variant Bridge::invokeMethod(godot_object *instance, void *methodData, voi
     auto methodDataPair = (std::pair<char *, char *> *) methodData;
     auto objectClass = Jvm::env->GetObjectClass(javaInstance);
     auto methodId = Jvm::env->GetMethodID(objectClass, methodDataPair->first, methodDataPair->second);
-//    auto variantJavaInstance = (jclass) Jvm::env->CallObjectMethod(javaInstance, methodId, args);
 
-    auto result = (jint) Jvm::env->CallIntMethod(javaInstance, methodId);
+    std::string signature = methodDataPair->second;
+    if (signature == "()I") {
+        auto result = (jint) Jvm::env->CallIntMethod(javaInstance, methodId);
+        auto variantPtr = std::malloc(sizeof(godot_variant));
+        Godot::gdnative->godot_variant_new_int((godot_variant *) (variantPtr), result);
+        return *((godot_variant *) variantPtr);
+    } else if (signature == "()Lgodot/core/Vector3;"){
+        auto result = Jvm::env->CallObjectMethod(javaInstance, methodId);
+        if (Jvm::env->ExceptionCheck()) {
+            Jvm::env->ExceptionDescribe();
+        }
+        if (!result) {
+            auto variantPtr = std::malloc(sizeof(godot_variant));
+            Godot::gdnative->godot_variant_new_nil((godot_variant *) (variantPtr));
+            return *((godot_variant *) variantPtr);
+        }
+        auto vector3Class = JniHelper::getClass("godot.core.Vector3");
+        auto xFieldId = Jvm::env->GetFieldID(vector3Class, "x", "D");
+        auto yFieldId = Jvm::env->GetFieldID(vector3Class, "y", "D");
+        auto zFieldId = Jvm::env->GetFieldID(vector3Class, "z", "D");
+        auto x = Jvm::env->GetDoubleField(result, xFieldId);
+        auto y = Jvm::env->GetDoubleField(result, yFieldId);
+        auto z = Jvm::env->GetDoubleField(result, zFieldId);
 
+        auto vector3Ptr = std::malloc(sizeof(godot_variant));
+        Godot::gdnative->godot_vector3_new((godot_vector3 *)vector3Ptr, x, y, z);
 
-//    std::string signature = methodDataPair->second;
-//    if (signature == "(F)V") {
-//        float fakeDelta = 0.002;
-//        Jvm::env->CallVoidMethod(javaInstance, methodId, fakeDelta);
-//    } else {
-//        Jvm::env->CallVoidMethod(javaInstance, methodId);
-//    }
+        auto variantPtr = std::malloc(sizeof(godot_variant));
+        Godot::gdnative->godot_variant_new_vector3((godot_variant *) (variantPtr), (godot_vector3 *) vector3Ptr);
+        return *((godot_variant *) variantPtr);
+    }
 
     auto variantPtr = std::malloc(sizeof(godot_variant));
-    Godot::gdnative->godot_variant_new_int((godot_variant *) (variantPtr), result);
+    Godot::gdnative->godot_variant_new_nil((godot_variant *) (variantPtr));
     return *((godot_variant *) variantPtr);
 }
